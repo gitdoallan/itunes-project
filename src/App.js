@@ -11,40 +11,37 @@ import ProfileEdit from './pages/ProfileEdit';
 import Search from './pages/Search';
 import NotFound from './pages/NotFound';
 
+const INIT_STATE = {
+  btnDisabled: true,
+  inputValue: '',
+  loading: false,
+  redirect: false,
+  goTo: '',
+};
+
 class App extends React.Component {
   constructor() {
     super();
-    this.state = {
-      btnDisabled: true,
-      inputValue: '',
-      loading: false,
-      redirect: false,
-      goTo: '',
-    };
+    this.state = { ...INIT_STATE };
     this.checkInput = this.checkInput.bind(this);
-    this.submitForm = this.submitForm.bind(this);
-    this.renderUser = this.renderUser.bind(this);
+    this.submitFormLogin = this.submitFormLogin.bind(this);
   }
 
   checkInput(e) {
     this.setState({ inputValue: e.target.value });
     const loginMin = 3;
-    const minInput = e.target.id === 'input-search' ? 2 : loginMin;
+    const minInput = loginMin;
     if (e.target.value.length >= minInput) {
       this.setState({ btnDisabled: false });
     }
   }
 
-  async submitForm(e) {
+  async submitFormLogin(e) {
     this.setState({ loading: true, redirect: true, goTo: '/search' });
     e.preventDefault();
     const { inputValue } = this.state;
     await createUser({ name: inputValue });
-    this.setState({ loading: false, inputValue: '', btnDisabled: true });
-  }
-
-  async renderUser() {
-    return 'hello';
+    this.setState({ ...INIT_STATE });
   }
 
   render() {
@@ -64,7 +61,7 @@ class App extends React.Component {
                     <Login
                       { ...this.state }
                       checkInput={ this.checkInput }
-                      submitForm={ this.submitForm }
+                      submitFormLogin={ this.submitFormLogin }
                     />
                   ) }
                 />
@@ -77,10 +74,7 @@ class App extends React.Component {
                         { ...this.state }
                         renderUser={ this.renderUser }
                       />
-                      <Search
-                        { ...this.state }
-                        checkInput={ this.checkInput }
-                      />
+                      <Search { ...this.state } />
                     </>
                   ) }
                 />
@@ -90,7 +84,6 @@ class App extends React.Component {
                     <>
                       <Header
                         { ...this.state }
-                        renderUser={ this.renderUser }
                       />
                       <Album { ...props } />
                     </>
@@ -103,7 +96,6 @@ class App extends React.Component {
                     <>
                       <Header
                         { ...this.state }
-                        renderUser={ this.renderUser }
                       />
                       <Favorites />
                     </>
@@ -116,7 +108,6 @@ class App extends React.Component {
                     <>
                       <Header
                         { ...this.state }
-                        renderUser={ this.renderUser }
                       />
                       <Profile />
                     </>
@@ -129,7 +120,6 @@ class App extends React.Component {
                     <>
                       <Header
                         { ...this.state }
-                        renderUser={ this.renderUser }
                       />
                       <ProfileEdit />
                     </>

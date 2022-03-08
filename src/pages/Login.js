@@ -3,15 +3,16 @@ import PropType from 'prop-types';
 
 export default class Login extends React.Component {
   render() {
-    const { btnDisabled, inputValue, checkInput, submitForm } = this.props;
+    const { btnDisabled, inputValue, checkInput, submitFormLogin } = this.props;
 
     return (
       <div data-testid="page-login">
         <span>Página: Login!</span>
-        <form onSubmit={ submitForm }>
+        <form onSubmit={ submitFormLogin }>
           <input
-            value={ inputValue }
             onChange={ checkInput }
+            value={ inputValue }
+            id="login-name-input"
             data-testid="login-name-input"
             type="text"
           />
@@ -32,5 +33,5 @@ Login.propTypes = {
   btnDisabled: PropType.bool.isRequired,
   inputValue: PropType.string.isRequired,
   checkInput: PropType.func.isRequired,
-  submitForm: PropType.func.isRequired,
+  submitFormLogin: PropType.func.isRequired,
 };
