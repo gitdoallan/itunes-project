@@ -9,7 +9,8 @@ export default class Album extends React.Component {
   }
 
   render() {
-    const { match: { params: { id } }, albumData } = this.props;
+    const { match: { params: { id } },
+      albumData, addSong, favorites, loadingChecked } = this.props;
     const albumInfo = albumData[0];
     return (
       <div data-testid="page-album">
@@ -20,15 +21,23 @@ export default class Album extends React.Component {
             {` - ${albumInfo?.collectionName} (ID: ${id})`}
           </span>
         </h3>
-        <MusicCard albumData={ albumData } />
+        <MusicCard
+          albumData={ albumData }
+          addSong={ addSong }
+          favorites={ favorites }
+          loadingChecked={ loadingChecked }
+        />
       </div>
     );
   }
 }
 
 Album.propTypes = {
-  albumData: PropType.shape({}).isRequired,
+  albumData: PropType.arrayOf(PropType.object).isRequired,
+  favorites: PropType.arrayOf(PropType.object).isRequired,
   listSongs: PropType.func.isRequired,
+  addSong: PropType.func.isRequired,
+  loadingChecked: PropType.bool.isRequired,
   match: PropType.shape({
     params: PropType.shape({
       id: string,
