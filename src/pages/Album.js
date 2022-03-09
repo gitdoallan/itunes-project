@@ -1,33 +1,34 @@
 import React from 'react';
 import PropType, { string } from 'prop-types';
-import getMusics from '../services/musicsAPI';
+import MusicCard from '../components/MusicCard';
 
 export default class Album extends React.Component {
-  constructor() {
-    super();
-    this.state = {
-      data: [],
-    };
-  }
-
-  async listSongs(id) {
-    const result = await getMusics(id);
-    // this.setState({ data: result });
+  componentDidMount() {
+    const { match: { params: { id } }, listSongs } = this.props;
+    listSongs(id);
   }
 
   render() {
-    const { match: { params: { id } } } = this.props;
-    const { data } = this.state;
-    this.listSongs(id);
+    const { match: { params: { id } }, albumData } = this.props;
+    const albumInfo = albumData[0];
     return (
       <div data-testid="page-album">
-        <span>Página: Album!!!!</span>
+        <img alt={ albumInfo?.collectionName } src={ albumInfo?.artworkUrl100 } />
+        <h3>
+          <span data-testid="artist-name">{`${albumInfo?.artistName}`}</span>
+          <span data-testid="album-name">
+            {` - ${albumInfo?.collectionName} (ID: ${id})`}
+          </span>
+        </h3>
+        <MusicCard albumData={ albumData } />
       </div>
     );
   }
 }
 
 Album.propTypes = {
+  albumData: PropType.shape({}).isRequired,
+  listSongs: PropType.func.isRequired,
   match: PropType.shape({
     params: PropType.shape({
       id: string,
