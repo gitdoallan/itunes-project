@@ -2,13 +2,19 @@ import React from 'react';
 import PropType from 'prop-types';
 
 export default class MusicCard extends React.Component {
+  componentDidMount() {
+    const { getFavSong } = this.props;
+    getFavSong();
+  }
+
   render() {
-    const { trackInfo, loadingAlbum } = this.props;
+    const { trackInfo, loadingCheck, favSong, favoritesId, checkFav } = this.props;
     return (
-      loadingAlbum
+      loadingCheck
         ? <span>Carregando...</span>
         : (
           <div>
+            {console.log(favoritesId)}
             {
               trackInfo?.map((element) => (
                 <div key={ element.trackId } className="song">
@@ -23,6 +29,15 @@ export default class MusicCard extends React.Component {
                     <code>audio</code>
                     .
                   </audio>
+                  <label htmlFor={ element.trackId }>
+                    Favorita
+                    <input
+                      type="checkbox"
+                      data-testid={`checkbox-music-${element.trackId}`}
+                      onChange={ () => favSong(element.trackId) }
+                      checked={ checkFav(element.trackId) }
+                    />
+                  </label>
                 </div>
               ))
             }
@@ -33,6 +48,10 @@ export default class MusicCard extends React.Component {
 }
 
 MusicCard.propTypes = {
+  favoritesId: PropType.arrayOf(PropType.any).isRequired,
+  checkFav: PropType.func.isRequired,
+  getFavSong: PropType.func.isRequired,
+  favSong: PropType.func.isRequired,
   trackInfo: PropType.arrayOf(PropType.any).isRequired,
-  loadingAlbum: PropType.bool.isRequired,
+  loadingCheck: PropType.bool.isRequired,
 };

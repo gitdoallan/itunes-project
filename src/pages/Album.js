@@ -9,8 +9,8 @@ export default class Album extends React.Component {
   }
 
   render() {
-    const { match: { params: { id } },
-      albumData, loadingAlbum } = this.props;
+    const { match: { params: { id } }, favoritesId, checkFav,
+      albumData, loadingAlbum, favSong, loadingCheck, getFavSong } = this.props;
     const trackInfo = [...albumData]; trackInfo.shift();
     return (
       loadingAlbum
@@ -29,7 +29,11 @@ export default class Album extends React.Component {
             </h3>
             <MusicCard
               trackInfo={ trackInfo }
-              loadingAlbum={ loadingAlbum }
+              loadingCheck={ loadingCheck }
+              favSong={ favSong }
+              getFavSong={ getFavSong }
+              favoritesId={ favoritesId }
+              checkFav={ checkFav }
             />
           </div>
         )
@@ -38,6 +42,11 @@ export default class Album extends React.Component {
 }
 
 Album.propTypes = {
+  favoritesId: PropType.arrayOf(PropType.any).isRequired,
+  getFavSong: PropType.func.isRequired,
+  checkFav: PropType.func.isRequired,
+  favSong: PropType.func.isRequired,
+  loadingCheck: PropType.bool.isRequired,
   albumData: PropType.arrayOf(PropType.object).isRequired,
   listSongs: PropType.func.isRequired,
   loadingAlbum: PropType.bool.isRequired,

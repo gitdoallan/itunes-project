@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import { createUser } from './services/userAPI';
 import getMusics from './services/musicsAPI';
+import { addSong, getFavoriteSongs, removeSong } from './services/favoriteSongsAPI';
 import Loading from './components/Loading';
 import Header from './components/Header';
 import Login from './pages/Login';
@@ -23,10 +24,38 @@ const INIT_STATE = {
 class App extends React.Component {
   constructor() {
     super();
-    this.state = { ...INIT_STATE, albumData: [], loadingAlbum: false };
+    this.state = { ...INIT_STATE,
+      albumData: [],
+      loadingAlbum: false,
+      loadingCheck: false,
+      favoritesId: [],
+    };
     this.checkInput = this.checkInput.bind(this);
     this.submitFormLogin = this.submitFormLogin.bind(this);
     this.listSongs = this.listSongs.bind(this);
+    this.favSong = this.favSong.bind(this);
+    this.getFavSong = this.getFavSong.bind(this);
+    this.checkFav = this.checkFav.bind(this);
+  }
+
+  async getFavSong() {
+    const result = await getFavoriteSongs();
+    this.setState({ favoritesId: [...new Set(result)] });
+  }
+
+  async favSong(id) {
+    const { favoritesId } = this.state;
+    this.setState({ loadingCheck: true });
+    const isFaved = favoritesId.some((e) => e === id);
+    if (!isFaved) {
+      await addSong(id);
+      this.setState((acc) => ({
+        favoritesId: [...acc.favoritesId, id], loadingCheck: false }));
+    } else {
+      await removeSong(id);
+      const removeFav = favoritesId.filter((e) => e !== id);
+      this.setState({ favoritesId: removeFav, loadingCheck: false });
+    }
   }
 
   checkInput(e) {
@@ -36,6 +65,12 @@ class App extends React.Component {
     if (e.target.value.length >= minInput) {
       this.setState({ btnDisabled: false });
     }
+  }
+
+  checkFav(id) {
+    const { favoritesId } = this.state;
+    const isChecked = favoritesId.some((e) => e === id);
+    return isChecked;
   }
 
   async submitFormLogin(e) {
@@ -97,6 +132,9 @@ class App extends React.Component {
                         { ...props }
                         { ...this.state }
                         listSongs={ this.listSongs }
+                        favSong={ this.favSong }
+                        getFavSong={ this.getFavSong }
+                        checkFav={ this.checkFav }
                       />
                     </>
                   ) }
