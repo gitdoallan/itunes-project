@@ -8,13 +8,12 @@ export default class MusicCard extends React.Component {
   }
 
   render() {
-    const { trackInfo, loadingCheck, favSong, favoritesId, checkFav } = this.props;
+    const { trackInfo, loadingCheck, favSong, checkFav } = this.props;
     return (
       loadingCheck
         ? <span>Carregando...</span>
         : (
           <div>
-            {console.log(favoritesId)}
             {
               trackInfo?.map((element) => (
                 <div key={ element.trackId } className="song">
@@ -48,7 +47,6 @@ export default class MusicCard extends React.Component {
 }
 
 MusicCard.propTypes = {
-  favoritesId: PropType.arrayOf(PropType.any).isRequired,
   checkFav: PropType.func.isRequired,
   getFavSong: PropType.func.isRequired,
   favSong: PropType.func.isRequired,

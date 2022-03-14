@@ -39,8 +39,10 @@ class App extends React.Component {
   }
 
   async getFavSong() {
+    this.setState({ loadingCheck: true });
     const result = await getFavoriteSongs();
     this.setState({ favoritesId: [...new Set(result)] });
+    this.setState({ loadingCheck: false });
   }
 
   async favSong(id) {
@@ -88,7 +90,8 @@ class App extends React.Component {
   }
 
   render() {
-    const { loading } = this.state;
+    const { loading, albumData } = this.state;
+    const trackInfo = [...albumData]; trackInfo.shift();
     return (
       <div>
         <h1>TrybeTunes</h1>
@@ -131,6 +134,7 @@ class App extends React.Component {
                       <Album
                         { ...props }
                         { ...this.state }
+                        trackInfo={ trackInfo }
                         listSongs={ this.listSongs }
                         favSong={ this.favSong }
                         getFavSong={ this.getFavSong }

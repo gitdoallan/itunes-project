@@ -9,9 +9,8 @@ export default class Album extends React.Component {
   }
 
   render() {
-    const { match: { params: { id } }, favoritesId, checkFav,
+    const { match: { params: { id } }, favoritesId, checkFav, trackInfo,
       albumData, loadingAlbum, favSong, loadingCheck, getFavSong } = this.props;
-    const trackInfo = [...albumData]; trackInfo.shift();
     return (
       loadingAlbum
         ? <span>Carregando...</span>
@@ -43,6 +42,7 @@ export default class Album extends React.Component {
 
 Album.propTypes = {
   favoritesId: PropType.arrayOf(PropType.any).isRequired,
+  trackInfo: PropType.arrayOf(PropType.any).isRequired,
   getFavSong: PropType.func.isRequired,
   checkFav: PropType.func.isRequired,
   favSong: PropType.func.isRequired,
