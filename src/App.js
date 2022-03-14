@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import { createUser } from './services/userAPI';
+import getMusics from './services/musicsAPI';
 import Loading from './components/Loading';
 import Header from './components/Header';
 import Login from './pages/Login';
@@ -22,9 +23,10 @@ const INIT_STATE = {
 class App extends React.Component {
   constructor() {
     super();
-    this.state = { ...INIT_STATE };
+    this.state = { ...INIT_STATE, albumData: [], loadingAlbum: false };
     this.checkInput = this.checkInput.bind(this);
     this.submitFormLogin = this.submitFormLogin.bind(this);
+    this.listSongs = this.listSongs.bind(this);
   }
 
   checkInput(e) {
@@ -42,6 +44,12 @@ class App extends React.Component {
     const { inputValue } = this.state;
     await createUser({ name: inputValue });
     this.setState({ ...INIT_STATE });
+  }
+
+  async listSongs(id) {
+    this.setState({ loadingAlbum: true });
+    const results = await getMusics(id);
+    this.setState({ albumData: results, loadingAlbum: false });
   }
 
   render() {
@@ -85,7 +93,11 @@ class App extends React.Component {
                       <Header
                         { ...this.state }
                       />
-                      <Album { ...props } />
+                      <Album
+                        { ...props }
+                        { ...this.state }
+                        listSongs={ this.listSongs }
+                      />
                     </>
                   ) }
                 />

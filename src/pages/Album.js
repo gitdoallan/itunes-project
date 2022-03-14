@@ -10,34 +10,37 @@ export default class Album extends React.Component {
 
   render() {
     const { match: { params: { id } },
-      albumData, addSong, favorites, loadingChecked } = this.props;
-    const albumInfo = albumData[0];
+      albumData, loadingAlbum } = this.props;
+    const trackInfo = [...albumData]; trackInfo.shift();
     return (
-      <div data-testid="page-album">
-        <img alt={ albumInfo?.collectionName } src={ albumInfo?.artworkUrl100 } />
-        <h3>
-          <span data-testid="artist-name">{`${albumInfo?.artistName}`}</span>
-          <span data-testid="album-name">
-            {` - ${albumInfo?.collectionName} (ID: ${id})`}
-          </span>
-        </h3>
-        <MusicCard
-          albumData={ albumData }
-          addSong={ addSong }
-          favorites={ favorites }
-          loadingChecked={ loadingChecked }
-        />
-      </div>
+      loadingAlbum
+        ? <span>Carregando...</span>
+        : (
+          <div data-testid="page-album">
+            <img
+              alt={ albumData[0]?.collectionName }
+              src={ albumData[0]?.artworkUrl100 }
+            />
+            <h3>
+              <span data-testid="artist-name">{`${albumData[0]?.artistName}`}</span>
+              <span data-testid="album-name">
+                {` - ${albumData[0]?.collectionName} (ID: ${id})`}
+              </span>
+            </h3>
+            <MusicCard
+              trackInfo={ trackInfo }
+              loadingAlbum={ loadingAlbum }
+            />
+          </div>
+        )
     );
   }
 }
 
 Album.propTypes = {
   albumData: PropType.arrayOf(PropType.object).isRequired,
-  favorites: PropType.arrayOf(PropType.object).isRequired,
   listSongs: PropType.func.isRequired,
-  addSong: PropType.func.isRequired,
-  loadingChecked: PropType.bool.isRequired,
+  loadingAlbum: PropType.bool.isRequired,
   match: PropType.shape({
     params: PropType.shape({
       id: string,
