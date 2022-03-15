@@ -26,14 +26,21 @@ export default class Album extends React.Component {
                 {` - ${albumData[0]?.collectionName} (ID: ${id})`}
               </span>
             </h3>
-            <MusicCard
-              trackInfo={ trackInfo }
-              loadingCheck={ loadingCheck }
-              favSong={ favSong }
-              getFavSong={ getFavSong }
-              favoritesId={ favoritesId }
-              checkFav={ checkFav }
-            />
+            {loadingCheck && <span>Carregando...</span>}
+            {trackInfo.map((e, index) => (
+              <MusicCard
+                key={ index }
+                trackId={ e.trackId }
+                trackName={ e.trackName }
+                previewUrl={ e.previewUrl }
+                loadingCheck={ loadingCheck }
+                favSong={ favSong }
+                getFavSong={ getFavSong }
+                favoritesId={ favoritesId }
+                checkFav={ checkFav }
+              />
+            ))}
+
           </div>
         )
     );
